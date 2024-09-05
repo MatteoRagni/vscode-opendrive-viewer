@@ -49,6 +49,13 @@ function getWebViewIndexHtml(context) {
     ${viewerJs}
     // End of extension loaded data
 
+    function offer_file_as_download(filename) {
+      vscode.postMessage({
+        command: "error",
+        message: "This functionality is not yet implemented",
+      });
+    }
+
     const canvas = document.getElementById("canvas");
     (function() {
       const px_ratio = window.devicePixelRatio || 1;
