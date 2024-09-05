@@ -2,7 +2,7 @@
   "name": "vscode-opendrive-viewer",
   "displayName": "OpenDRIVE Viewer",
   "description": "Visualize an OpenDRIVE in 3D using ODRViewer in Visual Studio Code",
-  "publisher": "Matteo Ragni",
+  "publisher": "MatteoRagni",
   "version": "1.0.0",
   "license": "Apache-2.0",
   "homepage": "https://github.com/MatteoRagni/vscode-opendrive-viewer/README.md",
