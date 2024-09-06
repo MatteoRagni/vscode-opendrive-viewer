@@ -29,10 +29,4 @@ There are currently no extensions settings.
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release
-
-**Enjoy!**
+Please refer to [CHANGELOG](./CHANGELOG.md) file.

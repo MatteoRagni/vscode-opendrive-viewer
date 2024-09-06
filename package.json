@@ -3,7 +3,7 @@
   "displayName": "OpenDRIVE Viewer",
   "description": "Visualize an OpenDRIVE in 3D using ODRViewer in Visual Studio Code",
   "publisher": "MatteoRagni",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "Apache-2.0",
   "homepage": "https://github.com/MatteoRagni/vscode-opendrive-viewer/README.md",
   "bugs": {
@@ -14,9 +14,9 @@
     "type": "github"
   },
   "engines": {
-    "vscode": "^1.92.0"
+    "vscode": "^1.86.0"
   },
-  "icon": "assets/logo.png",
+  "icon": "assets/asam-logo.png",
   "categories": [
     "Visualization"
   ],
@@ -49,7 +49,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.92.0",
+    "@types/vscode": "^1.86.0",
     "@types/mocha": "^10.0.7",
     "@types/node": "20.x",
     "eslint": "^8.57.0",
