@@ -1,0 +1,7 @@
+{
+  "scopeName": "opendrive",
+  "patterns": [{
+    "include": "text.xml"
+  }],
+  "repository": {}
+}

@@ -18,7 +18,7 @@
   },
   "icon": "assets/asam-logo.png",
   "categories": [
-    "Visualization"
+    "Visualization", "Snippets"
   ],
   "preview": true,
   "sponsor": {
@@ -41,7 +41,21 @@
         "when": "resourceExtname == .xodr",
         "group": "navigation"
       }]
-    }
+    },
+    "languages": [{
+      "id": "OpenDRIVE",
+      "aliases": ["opendrive", "xodr"],
+      "extensions": [".xodr"]
+    }],
+    "grammars": [{
+      "language": "OpenDRIVE",
+      "path": "./syntaxes/opendrive.tmLanguage.json",
+      "scopeName": "opendrive"
+    }],
+    "snippets": [{
+      "language": "OpenDRIVE",
+      "path": "./snippets/opendrive.snippets.json"
+    }]
   },
   "scripts": {
     "lint": "eslint .",

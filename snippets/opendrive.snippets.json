@@ -1,0 +1,820 @@
+{
+  "OpenDRIVE": {
+    "scope": "opendrive",
+    "description": "Defines a new OpenDRIVE empty document",
+    "prefix": ["opendrive", "xodr"],
+    "body": [
+      "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+      "<OpenDRIVE>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</OpenDRIVE>"
+    ]
+  },
+  "UserData": {
+    "scope": "opendrive",
+    "description": "Defines a userdata block",
+    "prefix": ["ud", "userdata"],
+    "body": [
+      "<userData>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</userData>"
+    ]
+  },
+  "Header": {
+    "scope": "opendrive",
+    "description": "Defines a new header section for the OpenDRIVE",
+    "prefix": ["header"],
+    "body": [
+      "<header revMajor=\"${1:1}\" revMinor=\"${2:6}\" name=\"$3\" version=\"$4\" date=\"${5:$CURRENT_YEAR-$CURRENT_MONTH-$CURRENT_DATE $CURRENT_HOUR:$CURRENT_MINUTE-$CURRENT_SECOND}\" north=\"$6\" south=\"$7\" east=\"$8\" west=\"$9\" vendor=\"$10\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</header>"
+    ]
+  },
+  "Header.Georeference": {
+    "scope": "opendrive",
+    "description": "Defines the OpenDRIVE Georeference",
+    "prefix": ["georeference"],
+    "body": [
+      "<geoReference>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</geoReference>"
+    ]
+  },
+  "Header.Georeference.tMerc": {
+    "scope": "opendrive",
+    "description": "Defines the OpenDRIVE Georeference Marcator WSG84 in latitude longitude (Proj String)",
+    "prefix": ["tmerc"],
+    "body": [
+      "<![CDATA[+proj=tmerc +lat_0=$0 +lon_0=$1 +k=1 +x_0=0 +y_0=0 +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs]]>"
+    ]
+  },
+  "Header.Offset": {
+    "scope": "opendrive",
+    "description": "Defines the OpenDRIVE Offset",
+    "prefix": ["offset"],
+    "body": [
+      "<offset x=\"$0\" y=\"$1\" z=\"$2\" hdg=\"$3\" />"
+    ]
+  },
+  "Road": {
+    "scope": "opendrive",
+    "description": "Defines a new road for the OpenDRIVE",
+    "prefix": ["road"],
+    "body": [
+      "<name=\"$1\" length=\"$2\" id=\"$3\" junction=\"${4:-1}\" rule=\"${5:RHT}\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</road>"
+    ]
+  },
+  "Road.Link": {
+    "scope": "opendrive",
+    "description": "Defines a link for a road",
+    "prefix": ["link", "rlink"],
+    "body": [
+      "<link>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</link>"
+    ]
+  },
+  "Road.Link.Predecessor": {
+    "scope": "opendrive",
+    "description": "Defines a link predecessor for a road",
+    "prefix": ["pred", "rpred", "predecessor"],
+    "body": [
+      "<predecessor elementId=\"$0\" elementType=\"${1:road}\" contactPoint=\"${2:start}\"/>"
+    ]
+  },
+  "Road.Link.Predecessor2": {
+    "scope": "opendrive",
+    "description": "Defines a link predecessor for a road",
+    "prefix": ["pred2", "rpred2", "predecessor"],
+    "body": [
+      "<predecessor elementId=\"$0\" elementType=\"${1:road}\" contactPoint=\"${2:start}\" elementS=\"$3\" elementDir=\"$4\"/>"
+    ]
+  },
+  "Road.Link.Successor": {
+    "scope": "opendrive",
+    "description": "Defines a link successor for a road",
+    "prefix": ["succ", "rsucc", "successor"],
+    "body": [
+      "<successor elementId=\"$0\" elementType=\"${1:road}\" contactPoint=\"${2:start}\"/>"
+    ]
+  },
+  "Road.Link.Successor2": {
+    "scope": "opendrive",
+    "description": "Defines a link predecessor for a road",
+    "prefix": ["succ2", "rsucc2", "successor2"],
+    "body": [
+      "<successor elementId=\"$0\" elementType=\"${1:road}\" contactPoint=\"${2:start}\" elementS=\"$3\" elementDir=\"$4\"/>"
+    ]
+  },
+  "Road.Type": {
+    "scope": "opendrive",
+    "description": "Defines road type",
+    "prefix": ["type", "rtype"],
+    "body": [
+      "<type s=\"$1\" type=\"$2\" country=\"$3\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</type>"
+    ]
+  },
+  "Road.Type.Speed": {
+    "scope": "opendrive",
+    "description": "Defines road type speed",
+    "prefix": ["speed", "rspeed"],
+    "body": [
+      "<speed max=\"$0\" unit=\"${1:km/h}\">"
+    ]
+  },
+  "Road.PlanView": {
+    "scope": "opendrive",
+    "description": "Defines road planview",
+    "prefix": ["planview", "rplanview", "pw"],
+    "body": [
+      "<planview>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</planview>"
+    ]
+  },
+  "Road.PlanView.Geometry": {
+    "scope": "opendrive",
+    "description": "Defines road planview geometry segment",
+    "prefix": ["geometry", "geom"],
+    "body": [
+      "<geometry s=\"$1\" x=\"$2\" y=\"$3\" hdg=\"$3\" length=\"$4\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</geometry>"
+    ]
+  },
+  "Road.PlanView.Geometry.Line": {
+    "scope": "opendrive",
+    "description": "Defines road planview geometry with line segment",
+    "prefix": ["line"],
+    "body": [
+      "<geometry s=\"$0\" x=\"$1\" y=\"$2\" hdg=\"$3\" length=\"$4\">",
+      "\t<line />",
+      "</geometry>"
+    ]
+  },
+  "Road.PlanView.Geometry.Arc": {
+    "scope": "opendrive",
+    "description": "Defines road planview geometry with arc segment",
+    "prefix": ["arc"],
+    "body": [
+      "<geometry s=\"$0\" x=\"$1\" y=\"$2\" hdg=\"$3\" length=\"$4\">",
+      "\t<arc curvature=\"$5\" />",
+      "</geometry>"
+    ]
+  },
+  "Road.PlanView.Geometry.Spiral": {
+    "scope": "opendrive",
+    "description": "Defines road planview geometry with spiral segment",
+    "prefix": ["spiral", "cloth", "clothoid"],
+    "body": [
+      "<geometry s=\"$0\" x=\"$1\" y=\"$2\" hdg=\"$3\" length=\"$4\">",
+      "\t<spiral curvStart=\"$5\" curvEnd=\"$6\" />",
+      "</geometry>"
+    ]
+  },
+  "Road.PlanView.Geometry.ParamPoly3": {
+    "scope": "opendrive",
+    "description": "Defines road planview geometry with parametric polynomial segment",
+    "prefix": ["ppoly", "parampoly", "poly", "p3", "pp3"],
+    "body": [
+      "<geometry s=\"$0\" x=\"$1\" y=\"$2\" hdg=\"$3\" length=\"$4\">",
+      "\t<paramPoly3 aU=\"0.0\" bU=\"$5\" cU=\"$6\" dU=\"$7\" aV=\"0.0\" bV=\"0.0\" cV=\"$8\" dV=\"$9\" pRange=\"${10:normalized}\" />",
+      "</geometry>"
+    ]
+  },
+  "Road.ElevationProfile": {
+    "scope": "opendrive",
+    "description": "Defines elevation profile for a road",
+    "prefix": ["elev", "elevation", "eprofile"],
+    "body": [
+      "<elevationProfile>",
+      "\t<elevation s=\"$0\" a=\"$1\" b=\"$2\" c=\"$3\" d=\"$4\" />",
+      "</elevationProfile>"
+    ]
+  },
+  "Road.ElevationProfile.Elevation": {
+    "scope": "opendrive",
+    "description": "Defines road elevation profile single element (add an element to existing elevation profile)",
+    "prefix": ["elev", "elevation"],
+    "body": [
+      "<elevation s=\"$0\" a=\"$1\" b=\"$2\" c=\"$3\" d=\"$4\" />"
+    ]
+  },
+  "Road.LateralProfile": {
+    "scope": "opendrive",
+    "description": "Defines lateral profile for a road",
+    "prefix": ["lat", "latprof", "lateral"],
+    "body": [
+      "<elevationProfile>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</elevationProfile>"
+    ]
+  },
+  "Road.LateralProfile.Superelevation": {
+    "scope": "opendrive",
+    "description": "Defines road superelevation to a lateral profile",
+    "prefix": ["sup", "selev", "superelevation"],
+    "body": [
+      "<superelevation s=\"$0\" a=\"$1\" b=\"$2\" c=\"$3\" d=\"$4\" />"
+    ]
+  },
+  "Road.LateralProfile.Shape": {
+    "scope": "opendrive",
+    "description": "Defines road shape to a lateral profile",
+    "prefix": ["sh", "shape"],
+    "body": [
+      "<shape s=\"$0\" a=\"$1\" b=\"$2\" c=\"$3\" d=\"$4\" />"
+    ]
+  },
+  "Road.Lanes": {
+    "scope": "opendrive",
+    "description": "Defines road lanes",
+    "prefix": ["ls", "lanes"],
+    "body": [
+      "<lanes>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</lanes>"
+    ]
+  },
+  "Road.Lanes.LaneOffset": {
+    "scope": "opendrive",
+    "description": "Defines road lane offset",
+    "prefix": ["loff", "laneoff", "laneoffset"],
+    "body": [
+      "<laneOffset s=\"$0\" a=\"$1\" b=\"$2\" c=\"$3\" d=\"$4\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection": {
+    "scope": "opendrive",
+    "description": "Defines road lane section",
+    "prefix": ["ls", "lsec", "lanesec", "lanesection"],
+    "body": [
+      "<laneSection s=\"$1\" singleSide=\"${2:false}\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</laneSection>"
+    ]
+  },
+  "Road.Lanes.LaneSection.Left": {
+    "scope": "opendrive",
+    "description": "Defines left lane in a lane section",
+    "prefix": ["left"],
+    "body": [
+      "<left>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</left>"
+    ]
+  },
+  "Road.Lanes.LaneSection.Center": {
+    "scope": "opendrive",
+    "description": "Defines center lane in a lane section",
+    "prefix": ["center"],
+    "body": [
+      "<center>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</center>"
+    ]
+  },
+  "Road.Lanes.LaneSection.Right": {
+    "scope": "opendrive",
+    "description": "Defines right lane in a lane section",
+    "prefix": ["right"],
+    "body": [
+      "<right>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</right>"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane": {
+    "scope": "opendrive",
+    "description": "Defines a lane",
+    "prefix": ["lane"],
+    "body": [
+      "<lane id=\"$1\" type=\"$2\" level=\"$3\" >",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</lane>"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Link": {
+    "scope": "opendrive",
+    "description": "Defines a link for a lane",
+    "prefix": ["link", "llink"],
+    "body": [
+      "<link>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</link>"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Link.Predecessor": {
+    "scope": "opendrive",
+    "description": "Defines a link predecessor for a lane",
+    "prefix": ["pred", "lpred", "predecessor"],
+    "body": [
+      "<predecessor id=\"$0\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Link.Successor": {
+    "scope": "opendrive",
+    "description": "Defines a link successor for a lane",
+    "prefix": ["succ", "lsucc", "successor"],
+    "body": [
+      "<successor id=\"$0\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Border": {
+    "scope": "opendrive",
+    "description": "Defines lane border (offset with respcet to reference line, no lane offset allowed!)",
+    "prefix": ["border"],
+    "body": [
+      "<border s=\"$0\" a=\"$1\" b=\"$2\" c=\"$3\" d=\"$4\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Width": {
+    "scope": "opendrive",
+    "description": "Defines lane width (offset with respcet to inner lane or centerlane)",
+    "prefix": ["width"],
+    "body": [
+      "<width s=\"$0\" a=\"$1\" b=\"$2\" c=\"$3\" d=\"$4\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.RoadMark": {
+    "scope": "opendrive",
+    "description": "Defines lane roadmark definition",
+    "prefix": ["rm", "roadmark", "rmark"],
+    "body": [
+      "<roadMark sOffset=\"$1\" type=\"$2\" weight=\"$3\" color=\"$4\" material=\"$5\" width=\"$6\" laneChange=\"$7\" height=\"$8\" >",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</roadMark>"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.RoadMark.Sway": {
+    "scope": "opendrive",
+    "description": "Defines lane roadmark sway offset",
+    "prefix": ["sway"],
+    "body": [
+      "<sway ds=\"$0\" a=\"$1\" b=\"$2\" c=\"$3\" d=\"$4\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.RoadMark.Type": {
+    "scope": "opendrive",
+    "description": "Defines lane roadmark type",
+    "prefix": ["type", "rmtype", "roadmarktype"],
+    "body": [
+      "<type name=\"$0\" width=\"$1\">",
+      "\t<line length=\"$2\" space=\"$3\" tOffset=\"$4\" sOffset=\"$5\" rule=\"$6\" width=\"$7\" color=\"$8\" />",
+      "</type>"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.RoadMark.Type.Line": {
+    "scope": "opendrive",
+    "description": "Defines an additional lane roadmark type line",
+    "prefix": ["typeline", "rmtypeline", "roadmarktypeline", "line"],
+    "body": [
+      "<line length=\"$0\" space=\"$1\" tOffset=\"$2\" sOffset=\"$3\" rule=\"$4\" width=\"$5\" color=\"$6\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.RoadMark.Explicit": {
+    "scope": "opendrive",
+    "description": "Defines lane explicit roadmark",
+    "prefix": ["explicit"],
+    "body": [
+      "<explicit>",
+      "\t<line length=\"$0\" tOffset=\"$1\" sOffset=\"$2\" rule=\"$3\" width=\"$4\" />",
+      "</type>"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.RoadMark.Explicit.Line": {
+    "scope": "opendrive",
+    "description": "Defines an additional lane roadmark explicit line",
+    "prefix": ["explicitline", "line"],
+    "body": [
+      "<line length=\"$0\" tOffset=\"$1\" sOffset=\"$2\" rule=\"$3\" width=\"$4\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Material": {
+    "scope": "opendrive",
+    "description": "Defines lane material",
+    "prefix": ["material", "lanematerial"],
+    "body": [
+      "<material sOffset=\"$0\" surface=\"$1\" friction=\"$2\" roughness=\"$3\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Speed": {
+    "scope": "opendrive",
+    "description": "Defines lane speed",
+    "prefix": ["speed", "lanespeed"],
+    "body": [
+      "<speed sOffset=\"$0\" max=\"$1\" unit=\"${2:km/h}\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Access": {
+    "scope": "opendrive",
+    "description": "Defines lane access restriction",
+    "prefix": ["access"],
+    "body": [
+      "<access sOffset=\"$0\" rule=\"$1\" restriction=\"$2\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Height": {
+    "scope": "opendrive",
+    "description": "Defines lane height",
+    "prefix": ["height"],
+    "body": [
+      "<height sOffset=\"$0\" inner=\"$1\" outer=\"$2\" />"
+    ]
+  },
+  "Road.Lanes.LaneSection.*.Lane.Rule": {
+    "scope": "opendrive",
+    "description": "Defines lane access restriction",
+    "prefix": ["rule", "lrule", "lanerule"],
+    "body": [
+      "<rule sOffset=\"$0\" value=\"$1\" />"
+    ]
+  },
+  "Road.Objects": {
+    "scope": "opendrive",
+    "description": "Defines objects for the road",
+    "prefix": ["objects", "objs"],
+    "body": [
+      "<objects>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</objects>"
+    ]
+  },
+  "Road.Objects.Object": {
+    "scope": "opendrive",
+    "description": "Defines an object for the road (must be inside objects)",
+    "prefix": ["object", "obj"],
+    "body": [
+      "<object t=\"$1\" zOffset=\"$2\" type=\"$3\" validLength=\"$4\" orientation=\"$5\"",
+      "\tsubtype=\"$6\" dynamic=\"$7\" hdg=\"$8\" name=\"$9\" pitch=\"$10\" id=\"$11\"",
+      "\troll=\"$12\" height=\"$13\" s=\"$14\" length=\"$15\" width=\"$16\" radius=\"$17\" >",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</object>"
+    ]
+  },
+  "Road.Objects.Object.Repeat": {
+    "scope": "opendrive",
+    "description": "Defines an object repeated element definition",
+    "prefix": ["repeat"],
+    "body": [
+      "<repeat s=\"$0\" length=\"$1\" distance=\"$2\" tStart=\"$3\" tEnd=\"$4\" heightStart=\"$5\"",
+      "\theightEnd=\"$6\" zOffsetStart=\"$7\" zOffsetEnd=\"$8\" widthStart=\"$9\" widthEnd=\"$10\"",
+      "\tlengthStart=\"$11\" lengthEnd=\"$12\" radiusStart=\"$13\" radiusEnd=\"$14\" />"
+    ]
+  },
+  "Road.Objects.Object.Outline": {
+    "scope": "opendrive",
+    "description": "Defines an object outline",
+    "prefix": ["outline"],
+    "body": [
+      "<outline id=\"$1\" fillType=\"$2\" outer=\"$3\" closed=\"$4\" laneType=\"$5\" >",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</outline>"
+    ]
+  },
+  "Road.Objects.Object.Outline.CornerRoad": {
+    "scope": "opendrive",
+    "description": "Defines an object outline with corner road",
+    "prefix": ["cornerroad"],
+    "body": [
+      "<cornerRoad s=\"$0\" t=\"$1\" dz=\"$2\" height=\"$3\" id=\"$4\" />"
+    ]
+  },
+  "Road.Objects.Object.Outline.CornerLocal": {
+    "scope": "opendrive",
+    "description": "Defines an object outline with corner local",
+    "prefix": ["cornerlocal"],
+    "body": [
+      "<cornerLocal u=\"$0\" v=\"$1\" z=\"$2\" height=\"$3\" id=\"$4\" />"
+    ]
+  },
+  "Road.Objects.Object.Outlines": {
+    "scope": "opendrive",
+    "description": "Defines object multiple outlines",
+    "prefix": ["outlines"],
+    "body": [
+      "<outlines>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</outlines>"
+    ]
+  },
+  "Road.Objects.Object.Material": {
+    "scope": "opendrive",
+    "description": "Defines object material",
+    "prefix": ["material", "objmaterial"],
+    "body": [
+      "<material surface=\"$0\" friction=\"$1\" roughness=\"$2\" />"
+    ]
+  },
+  "Road.Objects.Object.Validity": {
+    "scope": "opendrive",
+    "description": "Defines object validity",
+    "prefix": ["validity", "objvalidity"],
+    "body": [
+      "<validity fromLane=\"$0\" toLane=\"$1\" />"
+    ]
+  },
+  "Road.Objects.Object.ParkingSpace": {
+    "scope": "opendrive",
+    "description": "Defines object as a parking space",
+    "prefix": ["park", "parking", "space", "parkingspace"],
+    "body": [
+      "<parkingSpace access=\"$0\" restriction=\"$1\" />"
+    ]
+  },
+  "Road.Objects.Object.Markings": {
+    "scope": "opendrive",
+    "description": "Defines set of markings for an object",
+    "prefix": ["marks", "markings"],
+    "body": [
+      "<markings>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</markings>"
+    ]
+  },
+  "Road.Objects.Object.Markings.Marking": {
+    "scope": "opendrive",
+    "description": "Defines an object marking",
+    "prefix": ["mark", "marking"],
+    "body": [
+      "<marking side=\"$1\" weight=\"$2\" width=\"$3\" color=\"$4\" zOffset=\"$5\"",
+      "\tspaceLength=\"$6\" lineLength=\"$7\" startOffset=\"$8\" stopOffset=\"$9\" >",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</marking>"
+    ]
+  },
+  "Road.Objects.Object.Markings.Marking.CornerReference": {
+    "scope": "opendrive",
+    "description": "Defines the corner reference for an object marking",
+    "prefix": ["cornerref", "cornerreference", "cref"],
+    "body": [
+      "<cornerReference id=\"$0\" />"
+    ]
+  },
+  "Road.Objects.Object.Borders": {
+    "scope": "opendrive",
+    "description": "Defines set of borders for an object",
+    "prefix": ["borders", "objborders"],
+    "body": [
+      "<borders>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</borders>"
+    ]
+  },
+  "Road.Objects.Object.Borders.Border": {
+    "scope": "opendrive",
+    "description": "Defines an object border",
+    "prefix": ["border"],
+    "body": [
+      "<border width=\"$1\" type=\"$2\" outlineId=\"$3\" useCompleteOutline=\"$4\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</border>"
+    ]
+  },
+  "Road.Objects.Object.Borders.Border.CornerReference": {
+    "scope": "opendrive",
+    "description": "Defines the corner reference for an object border",
+    "prefix": ["cornerref", "cornerreference", "cref"],
+    "body": [
+      "<cornerReference id=\"$0\" />"
+    ]
+  },
+  "Road.Objects.ObjectReference": {
+    "scope": "opendrive",
+    "description": "Defines an object reference",
+    "prefix": ["objref", "objectref", "objectreference"],
+    "body": [
+      "<objectReference s=\"$0\" t=\"$1\" id=\"$2\" zOffset=\"$3\" validLength=\"$4\" orientation=\"$5\" >",
+      "\t<validity fromLane=\"$6\" toLane=\"$7\" />",
+      "</objectReference>"
+    ]
+  },
+  "Road.Objects.Tunnel": {
+    "scope": "opendrive",
+    "description": "Defines a tunnel",
+    "prefix": ["tunnel"],
+    "body": [
+      "<tunnel s=\"$0\" length=\"$1\" name=\"$2\" id=\"$3\" type=\"$4\" lighting=\"$5\" daylight=\"$6\" >",
+      "\t<validity fromLane=\"$7\" toLane=\"$8\" />",
+      "</tunnel>"
+    ]
+  },
+  "Road.Objects.Bridge": {
+    "scope": "opendrive",
+    "description": "Defines a bridge",
+    "prefix": ["bridge"],
+    "body": [
+      "<bridge s=\"$0\" length=\"$1\" name=\"$2\" id=\"$3\" type=\"$4\" >",
+      "\t<validity fromLane=\"$5\" toLane=\"$6\" />",
+      "</bridge>"
+    ]
+  },
+  "Road.*.*.*.Validity": {
+    "scope": "opendrive",
+    "description": "Defines a validity element",
+    "prefix": ["valid", "validirty"],
+    "body": [
+      "<validity fromLane=\"$0\" toLane=\"$1\" />"
+    ]
+  },
+  "Road.Signals": {
+    "scope": "opendrive",
+    "description": "Defines signals",
+    "prefix": ["signals", "signs"],
+    "body": [
+      "<signals>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</signals>"
+    ]
+  },
+  "Road.Signals.Signal": {
+    "scope": "opendrive",
+    "description": "Defines a signal in signals",
+    "prefix": ["signal", "sign"],
+    "body": [
+      "<signal s=\"$1\" t=\"$2\" id=\"$3\" name=\"$4\" dynamic=\"$5\"",
+      "\torientation=\"$6\" zOffset=\"$7\" country=\"$8\" countryRevision=\"$9\" type=\"$10\"",
+      "\tsubtype=\"$11\" value=\"$12\" unit=\"$13\" height=\"$14\" width=\"$15\" text=\"$16\"",
+      "\thOffset=\"$17\" pitch=\"$18\" roll=\"$19\" >",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</signal>"
+    ]
+  },
+  "Road.Signals.Signal.Dependency": {
+    "scope": "opendrive",
+    "description": "Defines a signal dependency",
+    "prefix": ["dep", "dependency"],
+    "body": [
+      "<dependency id=\"$0\" type=\"$1\" />"
+    ]
+  },
+  "Road.Signals.Signal.Reference": {
+    "scope": "opendrive",
+    "description": "Defines a signal reference",
+    "prefix": ["ref", "reference"],
+    "body": [
+      "<reference elementType=\"$0\" elementId=\"$1\" type=\"$2\" />"
+    ]
+  },
+  "Road.Signals.Signal.PositionRoad": {
+    "scope": "opendrive",
+    "description": "Defines a signal position on road",
+    "prefix": ["pos", "posroad", "proad", "positionroad"],
+    "body": [
+      "<positionRoad roadId=\"$0\" s=\"$1\" t=\"$2\" zOffset=\"$3\" hOffset=\"$4\" pitch=\"$5\" roll=\"$6\" />"
+    ]
+  },
+  "Road.Signals.Signal.PositionInertial": {
+    "scope": "opendrive",
+    "description": "Defines a signal inertial position",
+    "prefix": ["pos", "posinertial", "pinertial", "positioninertial"],
+    "body": [
+      "<positionRoad x=\"$0\" y=\"$1\" z=\"$2\" zOffset=\"$3\" hOffset=\"$4\" pitch=\"$5\" roll=\"$6\" />"
+    ]
+  },
+  "Road.Signals.SignalReference": {
+    "scope": "opendrive",
+    "description": "Defines a signal reference",
+    "prefix": ["ref", "sigref", "reference", "sigreference", "signalref", "signalreference"],
+    "body": [
+      "<signalReference s=\"$0\" t=\"$1\" id=\"$2\" orientation=\"$3\" />"
+    ]
+  },
+  "Road.Surface": {
+    "scope": "opendrive",
+    "description": "Defines road surface",
+    "prefix": ["surf", "surface", "rsurface", "roadsurface"],
+    "body": [
+      "<surface>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</surface>"
+    ]
+  },
+  "Road.Surface.CRG": {
+    "scope": "opendrive",
+    "description": "Defines new CRG file for road surface",
+    "prefix": ["crg"],
+    "body": [
+      "<CRG file=\"$0\" sStart=\"$1\" sEnd=\"$2\" orientation=\"$3\" mode=\"$4\" purpose=\"$5\"",
+      "\tsOffset=\"$6\" tOffset=\"$7\" zOffset=\"$8\" zScale=\"$9\" hOffset=\"$10\" />"
+    ]
+  },
+  "Controller": {
+    "scope": "opendrive",
+    "description": "Defines a controller",
+    "prefix": ["ctrl", "controller"],
+    "body": [
+      "<controller id=\"$1\" name=\"$2\" dequence=\"$3\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</controller>"
+    ]
+  },
+  "Controller.Control": {
+    "scope": "opendrive",
+    "description": "Defines a control element for a controller",
+    "prefix": ["ctrl", "control"],
+    "body": [
+      "<control signalId=\"$0\" id=\"$1\" />"
+    ]
+  },
+  "Junction": {
+    "scope": "opendrive",
+    "description": "Defines a junction",
+    "prefix": ["j", "jun", "junction"],
+    "body": [
+      "<junction name=\"$1\" id=\"$2\" type=\"$3\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</junction>"
+    ]
+  },
+  "Junction.Connection": {
+    "scope": "opendrive",
+    "description": "Defines a junction connection",
+    "prefix": ["conn", "connection"],
+    "body": [
+      "<connection id=\"$1\" type=\"$2\" incomingRoad=\"$3\" connectingRoad=\"$4\" contactPoint=\"$5\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</connection>"
+    ]
+  },
+  "Junction.Connection.Predecessor": {
+    "scope": "opendrive",
+    "description": "Defines a junction connection predecessor",
+    "prefix": ["pred", "jpred", "predecessor", "jpredecessor"],
+    "body": [
+      "<predecessor elementType=\"$0\" elementId=\"$1\" elementS=\"$2\" elementDir=\"$3\" connectingRoad=\"$4\" contactPoint=\"$5\" />"
+    ]
+  },
+  "Junction.Connection.Successor": {
+    "scope": "opendrive",
+    "description": "Defines a junction connection successor",
+    "prefix": ["succ", "jsucc", "successor", "jsuccessor"],
+    "body": [
+      "<successor elementType=\"$0\" elementId=\"$1\" elementS=\"$2\" elementDir=\"$3\" connectingRoad=\"$4\" contactPoint=\"$5\" />"
+    ]
+  },
+  "Junction.Connection.LaneLink": {
+    "scope": "opendrive",
+    "description": "Defines a junction connection lane link",
+    "prefix": ["link", "llink", "lanel", "lanelink"],
+    "body": [
+      "<laneLink from=\"$0\" to=\"$1\" />"
+    ]
+  },
+  "Junction.Priority": {
+    "scope": "opendrive",
+    "description": "Defines a junction priority",
+    "prefix": ["prio", "priority"],
+    "body": [
+      "<priority high=\"$0\" low=\"$1\" />"
+    ]
+  },
+  "Junction.Controller": {
+    "scope": "opendrive",
+    "description": "Defines a junction controller",
+    "prefix": ["ctrl", "jctrl", "controller", "jcontroller", "junctioncontroller"],
+    "body": [
+      "<controller id=\"$0\" type=\"$1\" sequence=\"$2\" />"
+    ]
+  },
+  "Junction.Surface": {
+    "scope": "opendrive",
+    "description": "Defines a junction surface",
+    "prefix": ["surf", "surface", "jsurface", "junctionsurface"],
+    "body": [
+      "<surface>",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</surface>"
+    ]
+  },
+  "Junction.Surface.CRG": {
+    "scope": "opendrive",
+    "description": "Defines new CRG file for junction surface",
+    "prefix": ["crg", "jcrg", "junctioncrg"],
+    "body": [
+      "<CRG file=\"$0\" mode=\"$1\" purpose=\"$2\" zOffset=\"$3\" zScale=\"$4\" />"
+    ]
+  },
+  "JunctionGroup": {
+    "scope": "opendrive",
+    "description": "Defines a junction group",
+    "prefix": ["junctiong", "jgroup", "junctiongroup"],
+    "body": [
+      "<junctionGroup name=\"$1\" id=\"$2\" type=\"$3\">",
+      "\t${0:$TM_SELECTED_TEXT}",
+      "</junctionGroup>"
+    ]
+  },
+  "JunctionGroup.JunctionReference": {
+    "scope": "opendrive",
+    "description": "Defines the reference to be included in a junction group",
+    "prefix": ["jref", "junctionreference"],
+    "body": [
+      "<junctionReference junction=\"$0\">"
+    ]
+  }
+}
