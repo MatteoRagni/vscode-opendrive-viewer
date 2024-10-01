@@ -18,11 +18,24 @@ OpenDRIVE definition.
 
 ## Original Author
 
-Original author and copyright holder is [Sebastian Pagels](https://github.com/pageldev). The application is built
+Original author and copyright holder is [Sebastian Pagels](https://github.com/pageldev). 
+
+<a href="https://github.com/pageldev">
+  <img src="https://avatars.githubusercontent.com/u/42587026?v=4" alt="@pageldev" width="64" style="border-radius: 64px"/>
+</a>
+
+The application is built
 on the top of the awesome [libOpenDRIVE](https://github.com/pageldev/libOpenDRIVE).
 
 > Please consider a donation to ODRViewer and libOpendDRIVE original projects (donation link is on 
 [odrviewer.io](https://odrviewer.io) bottom right corner).
+
+## Thanks to contributors
+
+<a href="https://github.com/fhasse95">
+  <img src="https://avatars.githubusercontent.com/u/49185957?v=4" alt="@fhasse95" width="64" style="border-radius: 64px"/>
+</a>
+
 
 ## Extension Settings
 

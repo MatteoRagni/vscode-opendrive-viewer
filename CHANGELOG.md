@@ -13,3 +13,7 @@
 - Adding OpenDRIVE language
 - Creating snippets for OpenDRIVE language
 - Camera position in viewer does not change after modifications
+
+## v1.1.1
+
+- Fixing resize bug. PR #1 by [@fhasse95](https://github.com/fhasse95)
