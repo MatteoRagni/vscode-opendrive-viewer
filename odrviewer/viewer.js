@@ -7498,16 +7498,17 @@ var OdrViewer = (() => {
           if (!win) return;
           if (GLFW.active.id == win.id) {
             if (width == screen.width && height == screen.height) {
-              Browser.requestFullscreen()
+              Browser.requestFullscreen();
             } else {
               Browser.exitFullscreen();
               Browser.setCanvasSize(width, height);
               win.width = width;
-              win.height = height
+              win.height = height;
+              _glViewport(0, 0, width, height);
             }
           }
           if (!win.windowSizeFunc) return;
-          getWasmTableEntry(win.windowSizeFunc)(win.id, width, height)
+          getWasmTableEntry(win.windowSizeFunc)(win.id, width, height);
         },
         createWindow: function (width, height, title, monitor, share) {
           var i, id;
