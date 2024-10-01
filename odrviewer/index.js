@@ -65,6 +65,7 @@ function getWebViewIndexHtml(context) {
     
     let OpenDriveViewer = null;
     let ModuleOdrViewer = null;
+    let firstLoad = true;
     
   
     function render() {
@@ -82,8 +83,9 @@ function getWebViewIndexHtml(context) {
       });
       try {
         ModuleOdrViewer.FS.createDataFile(".", "data.xodr", payload, true, true);
-        OpenDriveViewer.load_map("./data.xodr", 0.1, true);
+        OpenDriveViewer.load_map("./data.xodr", 0.1, firstLoad);
         ModuleOdrViewer.FS.unlink("data.xodr");
+        if (firstLoad) { firstLoad = false; }
       } catch (error) {
         vscode.postMessage({
           command: "error",
