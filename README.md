@@ -11,6 +11,11 @@ or launch the command `OpenDRIVE: Show the current OpenDRIVE in ODRViewer`
 ![Screenshot](assets/cmd-screen.png)
 ![Screenshot](assets/btn-screen.png)
 
+The position of the camera does not change between updates of the OpenDRIVE.
+
+The extensions defines the language `opendrive` and provides a full set of snippets relative to the
+OpenDRIVE definition.
+
 ## Original Author
 
 Original author and copyright holder is [Sebastian Pagels](https://github.com/pageldev). The application is built
