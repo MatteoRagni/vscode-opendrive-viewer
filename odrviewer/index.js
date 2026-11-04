@@ -15,11 +15,14 @@
  */
 const fs = require("fs");
 const crypto = require("crypto");
+const vscode = require("vscode");
 
-function getWebViewIndexHtml(runtimePaths) {
+function getWebViewIndexHtml(context) {
   const nonce = crypto.randomBytes(16).toString("base64");
-  const viewerWasm = fs.readFileSync(runtimePaths.viewerWasmPath, "utf8");
-  const viewerJs = fs.readFileSync(runtimePaths.viewerJsPath);
+  const viewerWasmPath = vscode.Uri.joinPath(context.extensionUri, "odrviewer", "viewer.wasm.base64").fsPath;
+  const viewerJsPath = vscode.Uri.joinPath(context.extensionUri, "odrviewer", "viewer.js").fsPath;
+  const viewerWasm = fs.readFileSync(viewerWasmPath, "utf8");
+  const viewerJs = fs.readFileSync(viewerJsPath);
   
   return `
 <!DOCTYPE html>
@@ -45,7 +48,7 @@ function getWebViewIndexHtml(runtimePaths) {
   </style>
 </head>
 <body>
-  <canvas id="canvas" class="fullscreen"></canvas>
+  <canvas id="canvas"></canvas>
   <script nonce="${nonce}">
     const vscode = acquireVsCodeApi();
     window.addEventListener("error", event => {
@@ -107,7 +110,8 @@ function getWebViewIndexHtml(runtimePaths) {
     let OpenDriveViewer = null;
     let ModuleOdrViewer = null;
     let firstLoad = true;
-    let pendingPayload = null;
+    let pendingPayload = [];
+    let payloadQueue = Promise.resolve();
     let renderLoopStarted = false;
     
   
@@ -133,16 +137,12 @@ function getWebViewIndexHtml(runtimePaths) {
   
     async function onPayload(payload, notificationId, fileName) {
       if (!ModuleOdrViewer) {
-        pendingPayload = { payload, notificationId, fileName };
+        pendingPayload.push({ payload, notificationId, fileName });
         return;
       }
 
       if (!OpenDriveViewer) OpenDriveViewer = ModuleOdrViewer.Viewer.get_instance();
       const mapPath = "./" + (typeof fileName === "string" && fileName ? fileName : "data.xodr");
-      vscode.postMessage({
-        command: "loadStart",
-        notificationId,
-      });
 
       try {
         document.body.offsetWidth;
@@ -186,10 +186,26 @@ function getWebViewIndexHtml(runtimePaths) {
       }
     }
 
+    function enqueuePayload(payload) {
+      payloadQueue = payloadQueue.then(
+        () => onPayload(payload.payload, payload.notificationId, payload.fileName),
+        () => onPayload(payload.payload, payload.notificationId, payload.fileName)
+      );
+    }
+
     window.addEventListener("message", (event) => {
       const message = event.data;
       if (message.command == "payload") {
-        onPayload(message.payload, message.notificationId, message.fileName);
+        const payload = {
+          payload: message.payload,
+          notificationId: message.notificationId,
+          fileName: message.fileName
+        };
+        if (!ModuleOdrViewer) {
+          pendingPayload.push(payload);
+        } else {
+          enqueuePayload(payload);
+        }
       } 
     });
   
@@ -197,7 +213,11 @@ function getWebViewIndexHtml(runtimePaths) {
       wasmBinary: wasmBytes.buffer,
       print: message => odr_log_callback("INFO", message),
       printErr: message => odr_log_callback("ERROR", message),
-      onAbort: message => odr_log_callback("ERROR", "Viewer aborted: " + message)
+      onAbort: message => {
+        const errorMessage = "Viewer aborted: " + message;
+        odr_log_callback("ERROR", errorMessage);
+        vscode.postMessage({ command: "error", message: errorMessage });
+      }
     };
 
     OdrViewer(viewerModule).then(Module => {
@@ -206,16 +226,16 @@ function getWebViewIndexHtml(runtimePaths) {
 
       // Informing vscode that load is actually complete.
       vscode.postMessage({command: "load"});
-      if (pendingPayload) {
-        const payload = pendingPayload;
-        pendingPayload = null;
-        onPayload(payload.payload, payload.notificationId, payload.fileName);
+      const queuedPayloads = pendingPayload;
+      pendingPayload = [];
+      for (const payload of queuedPayloads) {
+        enqueuePayload(payload);
       }
     }).catch((error) => { 
       vscode.postMessage({
         command: "error",
         message: error instanceof Error ? error.message : String(error)
-      })
+      });
     });
 
   </script>

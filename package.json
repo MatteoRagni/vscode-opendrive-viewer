@@ -3,7 +3,7 @@
   "displayName": "OpenDRIVE Viewer",
   "description": "Visualize an OpenDRIVE in 3D using ODRViewer in Visual Studio Code",
   "publisher": "MatteoRagni",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "license": "Apache-2.0",
   "homepage": "https://github.com/MatteoRagni/vscode-opendrive-viewer/README.md",
   "bugs": {
@@ -18,7 +18,8 @@
   },
   "icon": "assets/asam-logo.png",
   "categories": [
-    "Visualization", "Snippets"
+    "Visualization",
+    "Snippets"
   ],
   "preview": true,
   "sponsor": {
@@ -27,51 +28,56 @@
   },
   "main": "./extension.js",
   "contributes": {
-    "commands": [{
-      "command": "opendrive-viewer.show",
-      "title": "Show the current OpenDRIVE in ODRViewer",
-      "category": "OpenDRIVE",
-      "icon": "$(open-preview)",
-      "enablement": "resourceExtname == .xodr"
-    }, {
-      "command": "opendrive-viewer.downloadRuntime",
-      "title": "Download or Update ODRViewer Runtime",
-      "category": "OpenDRIVE"
-    }],
-    "menus": {
-      "editor/title": [{
+    "commands": [
+      {
         "command": "opendrive-viewer.show",
-        "when": "resourceExtname == .xodr",
-        "group": "navigation"
-      }]
+        "title": "Show the current OpenDRIVE in ODRViewer",
+        "category": "OpenDRIVE",
+        "icon": "$(open-preview)",
+        "enablement": "resourceExtname == .xodr"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "opendrive-viewer.show",
+          "when": "resourceExtname == .xodr",
+          "group": "navigation"
+        }
+      ]
     },
-    "languages": [{
-      "id": "OpenDRIVE",
-      "aliases": ["opendrive", "xodr"],
-      "extensions": [".xodr"]
-    }],
-    "grammars": [{
-      "language": "OpenDRIVE",
-      "path": "./syntaxes/opendrive.tmLanguage.json",
-      "scopeName": "opendrive"
-    }],
-    "snippets": [{
-      "language": "OpenDRIVE",
-      "path": "./snippets/opendrive.snippets.json"
-    }]
+    "languages": [
+      {
+        "id": "OpenDRIVE",
+        "aliases": [
+          "opendrive",
+          "xodr"
+        ],
+        "extensions": [
+          ".xodr"
+        ]
+      }
+    ],
+    "grammars": [
+      {
+        "language": "OpenDRIVE",
+        "path": "./syntaxes/opendrive.tmLanguage.json",
+        "scopeName": "opendrive"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "OpenDRIVE",
+        "path": "./snippets/opendrive.snippets.json"
+      }
+    ]
   },
   "scripts": {
-    "lint": "eslint .",
-    "pretest": "npm run lint",
-    "test": "vscode-test"
+    "lint": "eslint ."
   },
   "devDependencies": {
-    "@types/vscode": "^1.86.0",
-    "@types/mocha": "^10.0.7",
     "@types/node": "20.x",
-    "eslint": "^8.57.0",
-    "typescript": "^5.4.5",
-    "@vscode/test-cli": "^0.0.9",
-    "@vscode/test-electron": "^2.4.0"
+    "@types/vscode": "^1.86.0",
+    "eslint": "^8.57.0"
   }
 }

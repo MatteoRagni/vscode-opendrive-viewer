@@ -1,53 +1,11 @@
 const vscode = require('vscode');
 const odrviewer = require("./odrviewer");
-const { RuntimeManager } = require("./odrviewer/runtime");
 const path = require('path');
 
 /**
  * @param {vscode.ExtensionContext} context
  */
 function activate(context) {
-	const runtimeManager = new RuntimeManager(context);
-	const runtimeCommand = 'opendrive-viewer.downloadRuntime';
-
-	async function downloadRuntime() {
-		try {
-			await vscode.window.withProgress({
-				location: vscode.ProgressLocation.Notification,
-				title: "Downloading ODRViewer runtime",
-				cancellable: false
-			}, () => runtimeManager.download());
-			vscode.window.showInformationMessage("ODRViewer runtime is ready.");
-		} catch (error) {
-			const message = error instanceof Error ? error.message : String(error);
-			vscode.window.showErrorMessage(`ODRViewer runtime download failed: ${message}`);
-		}
-	}
-
-	async function checkRuntime() {
-		try {
-			const result = await runtimeManager.checkForUpdate();
-			if (result.status === "missing") {
-				const choice = await vscode.window.showInformationMessage(
-					"ODRViewer runtime is not installed.",
-					"Download ODRViewer Runtime"
-				);
-				if (choice === "Download ODRViewer Runtime") { await downloadRuntime(); }
-			} else if (result.status === "update") {
-				const choice = await vscode.window.showInformationMessage(
-					"A newer ODRViewer runtime is available.",
-					"Update ODRViewer Runtime"
-				);
-				if (choice === "Update ODRViewer Runtime") { await downloadRuntime(); }
-			}
-		} catch {
-			// Runtime checks are best effort when the website is unavailable.
-		}
-	}
-
-	const runtimeDisposable = vscode.commands.registerCommand(runtimeCommand, checkRuntime);
-	context.subscriptions.push(runtimeDisposable);
-
 	/**
 	 * Notification utility class to handle promises of progress from the 
 	 * WebView side. The progress is marked with a "unique identification"
@@ -82,22 +40,25 @@ function activate(context) {
 		 * @param {String} message the message to include in the notification
 		 */
 		notifyProgress(notificationId, message) {
-			const notification = { resolve: null };
+			let resolveNotification;
+			const progressPromise = new Promise(resolve => {
+				resolveNotification = resolve;
+			});
+			const notification = {
+				resolve: () => {
+					resolveNotification();
+					delete this.notifications[notificationId];
+				}
+			};
 			this.notifications[notificationId] = notification;
 
-			vscode.window.withProgress({
+			void vscode.window.withProgress({
 				location: vscode.ProgressLocation.Notification,
 				title: message,
 				cancellable: false
-			}, () => {
-				return new Promise(resolve => {
-					notification.resolve = () => {
-						resolve();
-						delete this.notifications[notificationId];
-					};
-				});
-			});
+			}, () => progressPromise);
 		}
+
 		/**
 		 * Resolve an existing notification
 		 * 
@@ -106,6 +67,16 @@ function activate(context) {
 		resolveProgress(notificationId) {
 			this.notifications[notificationId]?.resolve?.();
 		}
+
+		/**
+		 * Resolve all notifications that are still pending.
+		 */
+		resolveAll() {
+			for (const notification of Object.values(this.notifications)) {
+				notification.resolve?.();
+			}
+		}
+
 		/**
 		 * Create a notification for errors
 		 * 
@@ -127,20 +98,6 @@ function activate(context) {
 	 *  4. extension replies with a "payload" command to load the first map
 	 */
 	function openDriveViewerShow() {
-		if (!runtimeManager.isInstalled()) {
-			void vscode.window.showInformationMessage(
-				"ODRViewer runtime is not installed.",
-				"Download ODRViewer Runtime"
-			).then(choice => {
-				if (choice === "Download ODRViewer Runtime") { return downloadRuntime(); }
-				return undefined;
-			}).catch(error => {
-				const message = error instanceof Error ? error.message : String(error);
-				vscode.window.showErrorMessage(`ODRViewer runtime setup failed: ${message}`);
-			});
-			return;
-		}
-
 		const originalEditor = vscode.window.activeTextEditor;
 		if (!originalEditor || originalEditor.document.languageId !== 'OpenDRIVE') {
 			vscode.window.showErrorMessage("OpenDRIVE Viewer requires an active .xodr editor.");
@@ -152,16 +109,18 @@ function activate(context) {
 		notify.notifyProgress(loadNotificationId, "Loading ODRViewer application");
 		
 		const logLines = [];
+		const maxLogLines = 2000;
 
 		const tabName = `${path.basename(originalEditor.document.fileName)} - ODRViewer`;		
 		const panel = vscode.window.createWebviewPanel('odrviewer', tabName,
 			vscode.ViewColumn.Beside, { enableScripts: true, retainContextWhenHidden: true } );
-		const index = odrviewer.getWebViewIndexHtml(runtimeManager.getPaths());
+		const index = odrviewer.getWebViewIndexHtml(context);
 		const panelSubscriptions = [];
 		let panelDisposed = false;
 		const disposePanelSubscriptions = () => {
 			if (panelDisposed) { return; }
 			panelDisposed = true;
+			notify.resolveAll();
 			for (const subscription of panelSubscriptions) {
 				subscription.dispose();
 			}
@@ -218,6 +177,9 @@ function activate(context) {
 
 		const onLog = (message) => {
 			logLines.push(`[${message.level}] ${message.message}`);
+			if (logLines.length > maxLogLines) {
+				logLines.shift();
+			}
 			console.log(`[${message.level}] ${message.message}`);
 		};
 

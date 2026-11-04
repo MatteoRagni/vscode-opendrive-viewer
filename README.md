@@ -18,10 +18,8 @@ OpenDRIVE definition.
 
 ## ODRViewer Runtime
 
-The ODRViewer runtime is not bundled with this extension. On first activation, the extension offers
-to download the current `viewer.js` and WebAssembly runtime from [odrviewer.io](https://odrviewer.io/).
-Downloaded files are stored in VS Code global extension storage. When the remote runtime changes,
-the extension offers an update.
+The ODRViewer runtime is bundled with this extension at a tested version. Runtime updates are
+reviewed and included with extension updates.
 
 The runtime is a separate component maintained by the ODRViewer project and is subject to its own
 terms and licensing.
