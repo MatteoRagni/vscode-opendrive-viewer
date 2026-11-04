@@ -100,8 +100,6 @@ function getWebViewIndexHtml(context) {
       });
     }
 
-    const offer_file_as_download = offer_fs_file_as_download;
-
     const canvas = document.getElementById("canvas");
     canvas.addEventListener("contextmenu", event => {
       event.preventDefault();
@@ -136,15 +134,10 @@ function getWebViewIndexHtml(context) {
     };
   
     async function onPayload(payload, notificationId, fileName) {
-      if (!ModuleOdrViewer) {
-        pendingPayload.push({ payload, notificationId, fileName });
-        return;
-      }
-
-      if (!OpenDriveViewer) OpenDriveViewer = ModuleOdrViewer.Viewer.get_instance();
-      const mapPath = "./" + (typeof fileName === "string" && fileName ? fileName : "data.xodr");
-
       try {
+        if (!OpenDriveViewer) OpenDriveViewer = ModuleOdrViewer.Viewer.get_instance();
+        const mapPath = "./" + (typeof fileName === "string" && fileName ? fileName : "data.xodr");
+
         document.body.offsetWidth;
         await new Promise(requestAnimationFrame);
 
@@ -153,7 +146,7 @@ function getWebViewIndexHtml(context) {
         }
 
         const parsed = new DOMParser().parseFromString(payload, "application/xml");
-        if (!parsed.documentElement || parsed.documentElement.nodeName !== "OpenDRIVE") {
+        if (!parsed.documentElement || parsed.documentElement.nodeName !== "OpenDRIVE" || parsed.getElementsByTagName("parsererror").length > 0) {
           throw new Error("Received XML without an OpenDRIVE document element (length: " + payload.length + ")");
         }
 

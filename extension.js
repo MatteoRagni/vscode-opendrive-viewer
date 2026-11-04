@@ -99,7 +99,7 @@ function activate(context) {
 	 */
 	function openDriveViewerShow() {
 		const originalEditor = vscode.window.activeTextEditor;
-		if (!originalEditor || originalEditor.document.languageId !== 'OpenDRIVE') {
+		if (!originalEditor || path.extname(originalEditor.document.fileName).toLowerCase() !== '.xodr') {
 			vscode.window.showErrorMessage("OpenDRIVE Viewer requires an active .xodr editor.");
 			return;
 		}
@@ -108,13 +108,11 @@ function activate(context) {
 		const loadNotificationId = notify.createNotificationId();
 		notify.notifyProgress(loadNotificationId, "Loading ODRViewer application");
 		
-		const logLines = [];
-		const maxLogLines = 2000;
-
 		const tabName = `${path.basename(originalEditor.document.fileName)} - ODRViewer`;		
 		const panel = vscode.window.createWebviewPanel('odrviewer', tabName,
 			vscode.ViewColumn.Beside, { enableScripts: true, retainContextWhenHidden: true } );
 		const index = odrviewer.getWebViewIndexHtml(context);
+		const outputChannel = vscode.window.createOutputChannel("OpenDRIVE Viewer");
 		const panelSubscriptions = [];
 		let panelDisposed = false;
 		const disposePanelSubscriptions = () => {
@@ -126,13 +124,14 @@ function activate(context) {
 			}
 		};
 		panelSubscriptions.push(panel.onDidDispose(disposePanelSubscriptions));
+		panelSubscriptions.push(outputChannel);
 
 		/**
 		 * Subscribing to save event in workspace
 		 */
 		panelSubscriptions.push(vscode.workspace.onDidSaveTextDocument((document) => {
 			if (panelDisposed) { return; }
-			if (document.uri != originalEditor.document.uri) { return; }
+			if (document.uri.toString() !== originalEditor.document.uri.toString()) { return; }
 
 			const currentNotificationId = notify.createNotificationId();
 			notify.notifyProgress(currentNotificationId, `Reloading ${originalEditor.document.uri}`);
@@ -176,22 +175,11 @@ function activate(context) {
 		}
 
 		const onLog = (message) => {
-			logLines.push(`[${message.level}] ${message.message}`);
-			if (logLines.length > maxLogLines) {
-				logLines.shift();
-			}
-			console.log(`[${message.level}] ${message.message}`);
+			outputChannel.appendLine(`[${message.level}] ${message.message}`);
 		};
 
-		const onOpenLog = async () => {
-			const document = await vscode.workspace.openTextDocument({
-				language: 'log',
-				content: logLines.join('\n')
-			});
-			await vscode.window.showTextDocument(document, {
-				viewColumn: vscode.ViewColumn.Beside,
-				preview: true
-			});
+		const onOpenLog = () => {
+			outputChannel.show();
 		};
 
 		const onOpenEditor = async () => {
@@ -240,7 +228,7 @@ function activate(context) {
 						onLog(message);
 						break;
 					case 'openLog':
-						onOpenLog().catch(error => console.error(error));
+						onOpenLog();
 						break;
 					case 'openEditor':
 						onOpenEditor().catch(error => console.error(error));
