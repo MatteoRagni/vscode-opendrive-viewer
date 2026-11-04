@@ -16,14 +16,6 @@ The position of the camera does not change between updates of the OpenDRIVE.
 The extensions defines the language `opendrive` and provides a full set of snippets relative to the
 OpenDRIVE definition.
 
-## ODRViewer Runtime
-
-The ODRViewer runtime is bundled with this extension at a tested version. Runtime updates are
-reviewed and included with extension updates.
-
-The runtime is a separate component maintained by the ODRViewer project and is subject to its own
-terms and licensing.
-
 ## Original Author
 
 Original author and copyright holder is [Sebastian Pagels](https://github.com/pageldev). 
