@@ -1,0 +1,79 @@
+name: Upstream check
+
+# Compares the bundled ODRViewer runtime with the one on odrviewer.io and opens an
+# issue when they differ. Never blocks the caller: a different or unreachable
+# upstream is reported, not failed.
+
+on:
+  schedule:
+    - cron: "0 6 1 * *" # monthly, 1st day at 06:00 UTC
+  workflow_dispatch:
+  workflow_call:
+    outputs:
+      status:
+        description: same | different | unreachable
+        value: ${{ jobs.check.outputs.status }}
+      compatible:
+        description: true | false (when status is different)
+        value: ${{ jobs.check.outputs.compatible }}
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    outputs:
+      status: ${{ steps.check.outputs.status }}
+      compatible: ${{ steps.check.outputs.compatible }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Compare bundled runtime with odrviewer.io
+        id: check
+        run: node scripts/check-upstream.mjs
+        env:
+          OUTPUT_DIR: ${{ runner.temp }}/upstream-check
+
+      - name: Upload upstream runtime
+        if: steps.check.outputs.status == 'different'
+        uses: actions/upload-artifact@v5
+        with:
+          name: odrviewer-upstream
+          path: ${{ steps.check.outputs.upstream }}
+
+      - name: Open update issue
+        if: steps.check.outputs.status == 'different' && github.repository == 'MatteoRagni/vscode-opendrive-viewer'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHORT_SHA: ${{ steps.check.outputs.short_sha }}
+          COMPATIBLE: ${{ steps.check.outputs.compatible }}
+          REPORT: ${{ steps.check.outputs.report }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          title="Upstream ODRViewer update (sha ${SHORT_SHA})"
+          label="upstream-update"
+
+          gh label create "$label" --color FBCA04 \
+            --description "New ODRViewer runtime on odrviewer.io" 2>/dev/null || true
+
+          if gh issue list --state open --label "$label" --limit 200 --json title --jq '.[].title' \
+              | grep -Fxq "$title"; then
+            echo "Issue \"$title\" already open, nothing to do."
+            exit 0
+          fi
+
+          labels="$label"
+          if [ "$COMPATIBLE" != "true" ]; then
+            gh label create "needs-review" --color D93F0B \
+              --description "Upstream change needs manual review" 2>/dev/null || true
+            labels="$label,needs-review"
+          fi
+
+          { cat "$REPORT"; printf '\n---\nDetected by [workflow run](%s).\n' "$RUN_URL"; } > issue.md
+          gh issue create --title "$title" --label "$labels" --body-file issue.md
