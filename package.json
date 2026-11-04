@@ -76,8 +76,9 @@
     "lint": "eslint ."
   },
   "devDependencies": {
-    "@types/node": "20.x",
-    "@types/vscode": "^1.86.0",
-    "eslint": "^8.57.0"
+    "@types/node": "^20.19.43",
+    "@types/vscode": "1.86.0",
+    "eslint": "^10.14.0",
+    "globals": "^17.14.0"
   }
 }
