@@ -1,0 +1,78 @@
+name: Release
+
+# Push a tag vX.Y.Z matching package.json "version" to publish.
+# workflow_dispatch must be started on the tag (Use workflow from -> Tags).
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  upstream:
+    uses: ./.github/workflows/upstream-check.yml
+    permissions:
+      contents: read
+      issues: write
+
+  publish:
+    needs: upstream
+    # Upstream differences are reported by the upstream job, they do not block the release.
+    if: ${{ !cancelled() && github.repository == 'MatteoRagni/vscode-opendrive-viewer' }}
+    runs-on: ubuntu-latest
+    environment: marketplace
+    permissions:
+      contents: write
+    env:
+      VSIX: vscode-opendrive-viewer-${{ github.ref_name }}.vsix
+      OVSX_PAT: ${{ secrets.OVSX_PAT }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Check tag matches package.json version
+        run: |
+          if [ "${{ github.ref_type }}" != "tag" ]; then
+            echo "::error::Release must run on a tag, got ${{ github.ref_type }} '${{ github.ref_name }}'."
+            exit 1
+          fi
+          expected="v$(node -p "require('./package.json').version")"
+          if [ "${{ github.ref_name }}" != "$expected" ]; then
+            echo "::error::Tag ${{ github.ref_name }} does not match package.json version ($expected)."
+            exit 1
+          fi
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - name: Package extension
+        run: npx vsce package --out "$VSIX"
+
+      - name: Publish to Visual Studio Marketplace
+        run: npx vsce publish --packagePath "$VSIX" --skip-duplicate
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Publish to Open VSX
+        if: env.OVSX_PAT != ''
+        run: npx ovsx publish --packagePath "$VSIX" --skip-duplicate
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$VSIX" --clobber
+          else
+            gh release create "$TAG" "$VSIX" --title "$TAG" --generate-notes --verify-tag
+          fi
